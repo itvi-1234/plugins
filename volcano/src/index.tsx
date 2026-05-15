@@ -10,9 +10,11 @@ import PodGroupDetail from './components/podgroups/Detail';
 import PodGroupList from './components/podgroups/List';
 import QueueDetail from './components/queues/Detail';
 import QueueList from './components/queues/List';
+import { registerVolcanoMapExtensions } from './mapRegistration';
 import { registerVolcanoIcon } from './volcanoIcon';
 
 registerVolcanoIcon();
+registerVolcanoMapExtensions();
 
 /**
  * Route and sidebar registration settings for a Volcano resource section.

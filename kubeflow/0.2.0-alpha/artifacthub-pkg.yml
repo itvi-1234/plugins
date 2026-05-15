@@ -1,0 +1,38 @@
+version: 0.2.0-alpha
+name: "headlamp_kubeflow"
+displayName: Kubeflow
+createdAt: "2026-05-12T00:00:00Z"
+logoURL: "https://raw.githubusercontent.com/kubeflow/manifests/refs/heads/master/common/oauth2-proxy/base/kubeflow-logo.svg"
+description: A UI for viewing and managing Kubeflow resources in Headlamp.
+changes:
+  - kind: added
+    description: "Katib: Add KatibExperiments, KatibTrials, and KatibSuggestions list and detail views."
+  - kind: added
+    description: "Katib: Add KatibOverview and RBAC views."
+  - kind: added
+    description: "Katib: Implement Katib trial log viewer."
+  - kind: added
+    description: "Katib: Register Katib routes and sidebar entries."
+  - kind: added
+    description: "Pipelines: Add PipelinesList, PipelinesDetail, PipelineVersions, PipelineExperiments, PipelineRuns, PipelineRecurringRuns, and PipelineArtifacts components."
+  - kind: added
+    description: "Pipelines: Add centralized log viewer integrated with Pipelines and Notebooks."
+  - kind: added
+    description: "Common: Add KubeflowConditionsSection, KubeflowJsonSection, KubeflowStatusBadge, and KubeflowTypeBadge shared components."
+  - kind: added
+    description: "Common: Add Katib formatting utilities and mock data fixtures."
+  - kind: added
+    description: "Hooks: Add useSubjectAccessReview hook for RBAC checks."
+  - kind: changed
+    description: "Common: Refactor spec viewers and detail pages to use the activity-based viewer system."
+  - kind: changed
+    description: "Common: Refactor existing badges to use generic badge components."
+  - kind: changed
+    description: "Hooks: Update installation check logic."
+  - kind: fixed
+    description: "Common: Fix newline normalization."
+annotations:
+  headlamp/plugin/archive-url: "https://github.com/headlamp-k8s/plugins/releases/download/kubeflow-0.2.0-alpha/headlamp-k8s-kubeflow-0.2.0-alpha.tar.gz"
+  headlamp/plugin/archive-checksum: "SHA256:e8d3369bd49fe99c05a8aac376dcf71fede29ff254ff0672550f753ed96706ac"
+  headlamp/plugin/version-compat: ">=0.22"
+  headlamp/plugin/distro-compat: "in-cluster,web,docker-desktop,desktop"

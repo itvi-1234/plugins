@@ -133,14 +133,20 @@ function getMinTaskMemberSection(podGroup: VolcanoPodGroup) {
  *
  * @returns PodGroup details view with extra sections and events.
  */
-export default function PodGroupDetail() {
-  const { namespace, name } = useParams<{ namespace: string; name: string }>();
+export default function PodGroupDetail(props: {
+  namespace?: string;
+  name?: string;
+  cluster?: string;
+}) {
+  const params = useParams<{ namespace: string; name: string }>();
+  const { namespace = params.namespace, name = params.name, cluster } = props;
 
   return (
     <DetailsGrid
       resourceType={VolcanoPodGroup}
       name={name}
       namespace={namespace}
+      cluster={cluster}
       withEvents
       extraInfo={(podGroup: VolcanoPodGroup) =>
         podGroup && [

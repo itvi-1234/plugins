@@ -642,7 +642,12 @@ export function HealthCheckDisplay({
   if (!skipSummary) {
     if (mhc.nodeStartupTimeout)
       mhcRows.push({ name: 'Node Startup Timeout', value: mhc.nodeStartupTimeout });
-    if (mhc.maxUnhealthy) mhcRows.push({ name: 'Max Unhealthy', value: mhc.maxUnhealthy });
+    if (mhc.maxUnhealthy !== undefined && mhc.maxUnhealthy !== null) {
+      mhcRows.push({
+        name: 'Max Unhealthy',
+        value: mhc.maxUnhealthy,
+      });
+    }
     if (mhc.unhealthyRange) mhcRows.push({ name: 'Unhealthy Range', value: mhc.unhealthyRange });
   }
 

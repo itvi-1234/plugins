@@ -388,11 +388,13 @@ function getJobActionButtons(job: VolcanoJob) {
  *
  * @returns Job details view with extra sections and events.
  */
-export default function JobDetail() {
-  const { namespace, name } = useParams<{ namespace: string; name: string }>();
-  const [podGroups] = VolcanoPodGroup.useList({ namespace });
+export default function JobDetail(props: { namespace?: string; name?: string; cluster?: string }) {
+  const params = useParams<{ namespace: string; name: string }>();
+  const { namespace = params.namespace, name = params.name, cluster } = props;
+  const [podGroups] = VolcanoPodGroup.useList({ namespace, cluster });
   const [pods] = PodResource.useList({
     namespace,
+    cluster,
     labelSelector:
       name && namespace
         ? `volcano.sh/job-name=${name},volcano.sh/job-namespace=${namespace}`
@@ -404,6 +406,7 @@ export default function JobDetail() {
       resourceType={VolcanoJob}
       name={name}
       namespace={namespace}
+      cluster={cluster}
       withEvents
       extraInfo={(job: VolcanoJob) => {
         if (!job) {

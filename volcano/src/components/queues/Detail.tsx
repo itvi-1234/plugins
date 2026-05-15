@@ -455,16 +455,18 @@ function getChildQueuesSection(queue: VolcanoQueue, queues: VolcanoQueue[] | nul
  *
  * @returns Queue details view with extra sections and events.
  */
-export default function QueueDetail() {
-  const { name } = useParams<{ name: string }>();
-  const [queues] = VolcanoQueue.useList();
-  const [podGroups] = VolcanoPodGroup.useList();
+export default function QueueDetail(props: { name?: string; cluster?: string }) {
+  const params = useParams<{ name: string }>();
+  const { name = params.name, cluster } = props;
+  const [queues] = VolcanoQueue.useList({ cluster });
+  const [podGroups] = VolcanoPodGroup.useList({ cluster });
   const queuePodGroupStats = useMemo(() => getQueuePodGroupStats(podGroups), [podGroups]);
 
   return (
     <DetailsGrid
       resourceType={VolcanoQueue}
       name={name}
+      cluster={cluster}
       withEvents
       actions={(queue: VolcanoQueue) => (queue ? getQueueActionButtons(queue) : [])}
       extraInfo={(queue: VolcanoQueue) =>

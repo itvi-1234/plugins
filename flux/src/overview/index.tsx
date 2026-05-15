@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { K8s } from '@kinvolk/headlamp-plugin/lib';
+import { K8s, Router, Utils } from '@kinvolk/headlamp-plugin/lib';
 import {
   ActionButton,
   Link,
@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import SourceLink from '../common/Link';
 import {
   AlertNotification,
@@ -205,6 +206,7 @@ function FluxHealthBanner({
 }
 
 export function FluxOverview() {
+  const history = useHistory();
   const [sortFilter, setSortFilter] = useState(() => store.get()?.overviewSortFilter ?? 'failed');
   const [showFilter, setShowFilter] = useState(
     () => store.get()?.overviewShowFilter ?? 'configured'
@@ -439,7 +441,10 @@ export function FluxOverview() {
               description="Flux Settings"
               icon="mdi:cog"
               onClick={() => {
-                window.location.href = '/settings/plugins/@headlamp-k8s%2Fflux';
+                const settingsUrl = Router.createRouteURL('pluginSettings', {
+                  pluginName: '@headlamp-k8s/flux',
+                });
+                history.push(settingsUrl);
               }}
             />,
           ],
@@ -597,33 +602,33 @@ function FluxOverviewChart({ resourceClass }) {
     switch (name) {
       case 'externalartifacts': // fallthrough
       case 'gitrepositories':
-        return '/flux/sources';
+        return 'sources';
       case 'ocirepositories':
-        return '/flux/sources';
+        return 'sources';
       case 'buckets':
-        return '/flux/sources';
+        return 'sources';
       case 'helmrepositories':
-        return '/flux/sources';
+        return 'sources';
       case 'helmcharts':
-        return '/flux/sources';
+        return 'sources';
       case 'kustomizations':
-        return '/flux/kustomizations';
+        return 'kustomizations';
       case 'helmreleases':
-        return '/flux/helmreleases';
+        return 'helmreleases';
       case 'alerts':
-        return '/flux/notifications';
+        return 'notifications';
       case 'providers':
-        return '/flux/notifications';
+        return 'notifications';
       case 'receivers':
-        return '/flux/notifications';
+        return 'notifications';
       case 'imagerepositories':
-        return '/flux/image-automations';
+        return 'image-automations';
       case 'imageupdateautomations':
-        return '/flux/image-automations';
+        return 'image-automations';
       case 'imagepolicies':
-        return '/flux/image-automations';
+        return 'image-automations';
       case 'terraforms':
-        return '/flux/terraforms';
+        return 'terraforms';
     }
 
     return '';
@@ -711,7 +716,7 @@ function FluxOverviewChart({ resourceClass }) {
       const [success, failed, suspended, processing] = getStatus(crds);
 
       // Calculate actual percentages
-      const successPercent = total > 0 ? Math.round((success / total) * 100) : 0;
+      const successPercent = total > 0 ? Math.round((success / total) * 100) : 100;
       const failedPercent = total > 0 ? Math.round((failed / total) * 100) : 0;
       const suspendedPercent = total > 0 ? Math.round((suspended / total) * 100) : 0;
       const processingPercent = total > 0 ? Math.round((processing / total) * 100) : 0;
@@ -772,7 +777,7 @@ function FluxOverviewChart({ resourceClass }) {
       return (
         <Box>
           <Box>
-            <Link routeName={prepareLink(resourceClass.apiName)}>
+            <Link routeName={prepareLink(resourceClass.apiName)} activeCluster={Utils.getCluster()}>
               {prepareName(resourceClass.apiName)}
             </Link>
           </Box>
