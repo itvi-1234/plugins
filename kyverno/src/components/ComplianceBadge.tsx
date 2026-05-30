@@ -49,19 +49,8 @@ export function ComplianceBadge() {
 function ComplianceBadgeContent() {
   const { items: policyReports } = PolicyReport.useList();
   const { items: clusterPolicyReports } = ClusterPolicyReport.useList();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const history = useHistory();
   const cluster = K8s.useCluster();
-
-  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
 
   // Hide the badge until BOTH streams arrive — otherwise we'd briefly show a misleading
   // "100% compliant" while only one list has resolved.
@@ -97,6 +86,37 @@ function ComplianceBadgeContent() {
     return result;
   }, [policyReports, clusterPolicyReports]);
 
+  return (
+    <PureComplianceBadge
+      counts={counts}
+      isLoading={isLoading}
+      onViewViolations={() => {
+        const violationsPath = cluster ? `/c/${cluster}/kyverno/violations` : '/kyverno/violations';
+        history.push(violationsPath);
+      }}
+    />
+  );
+}
+
+export interface PureComplianceBadgeProps {
+  counts: Record<PolicyResultStatus, number>;
+  isLoading?: boolean;
+  onViewViolations?: () => void;
+}
+
+export function PureComplianceBadge({ counts, isLoading, onViewViolations }: PureComplianceBadgeProps) {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
   if (isLoading) {
     return null;
   }
@@ -110,11 +130,7 @@ function ComplianceBadgeContent() {
   return (
     <>
       <Tooltip title="Kyverno Compliance">
-        <IconButton
-          onClick={handleOpen}
-          size="small"
-          sx={{ color: 'inherit' }}
-        >
+        <IconButton onClick={handleOpen} size="small" sx={{ color: 'inherit' }}>
           <Badge badgeContent={violationCount || undefined} color={badgeColor} max={999}>
             <Icon icon="kyverno:logo" width="24" />
           </Badge>
@@ -163,8 +179,7 @@ function ComplianceBadgeContent() {
             component="button"
             onClick={() => {
               handleClose();
-              const violationsPath = cluster ? `/c/${cluster}/kyverno/violations` : '/kyverno/violations';
-              history.push(violationsPath);
+              onViewViolations?.();
             }}
             underline="hover"
             variant="body2"
